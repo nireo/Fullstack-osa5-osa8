@@ -21,47 +21,65 @@ const App = () => {
 		event.preventDefault()
 		try {
 			const user = await loginService.login({
-				username, password
+				username, password,
 			})
-
+	
 			setUser(user)
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
 			setErrorMessage('käyttäjätunnus tai salasana virheellinen')
+			setTimeout(() => {
+				setErrorMessage(null)
+			}, 5000)
 		}
 	}
-	
-	return (
+
+	const showBlogs = () => (
 		<div>
-			<Notification message={errorMessage} />
-			<h2>blogs</h2>
-			<form  onSubmit={handleLogin}>
-				<div>
-					käyttäjätunnus
-					<input 
-						type="text"
-						value={username}
-						name="Username"
-						onChange={({target}) => setUsername(target.value)}
-					/>
-				</div>
-				<div>
-					salasana
-					<input
-						type="password"
-						value={password}
-						name="Password"
-						onChange={({target}) => setPassword(target.value)}
-					/>
-				</div>
-				<button type="submit">kirjaudu</button>
-			</form>
+			<h2>{user.name} logged in</h2>
 			{blogs.map(blog =>
 				<Blog key={blog.id} blog={blog} />
 			)}
 		</div>
+
+	)
+
+	const loginForm = () => (
+		<div>
+		<form onSubmit={handleLogin}>
+			<div>
+				käyttäjätunnus
+				<input 
+					type="text"
+					value={username}
+					name="Username"
+					onChange={({target}) => setUsername(target.value)}
+				/>
+			</div>
+			<div>
+				salasana
+				<input
+					type="password"
+					value={password}
+					name="Password"
+					onChange={({target}) => setPassword(target.value)}
+				/>
+			</div>
+			<button type="submit">kirjaudu</button>
+		</form>
+		</div>
+	)
+
+	return (
+		<div>
+			<h1>blogs</h1>
+			<Notification message={errorMessage} />
+			{user === null && loginForm()}
+			{user !== null && showBlogs()}
+		</div>
 	)
 }
+
 
 export default App
