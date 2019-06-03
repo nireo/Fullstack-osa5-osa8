@@ -10,6 +10,9 @@ const App = () => {
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
 	const [errorMessage, setErrorMessage] = useState(null)
+	const [title, setTitle] = useState('')
+	const [author, setAuthor] = useState('')
+	const [url, setUrl] = useState('')
 
 
 	// get blogs to display
@@ -52,13 +55,58 @@ const App = () => {
 		}
 	}
 
-	const showBlogs = () => (
+	const addBlog = async (event) => {
+		event.preventDefault()
+
+		const blogObject = {
+			title: title,
+			author: author,
+			url: url,
+			likes: 0
+		}
+
+		const returnedBlog = await blogService.create(blogObject)
+
+		setBlogs(blogs.concat(returnedBlog))
+		setTitle('')
+		setAuthor('')
+		setUrl('')
+	}
+
+	const formBlog = () => (
 		<div>
-			<h2>{user.name} logged in</h2>
-			<button onClick={() => setUser(null)}>kirjaudu ulos</button>
-			{blogs.map(blog =>
-				<Blog key={blog.id} blog={blog} />
-			)}
+			<div>
+				<h4>{user.name} logged in</h4>
+				<button onClick={() => setUser(null)}>kirjaudu ulos</button>
+				{blogs.map(blog =>
+					<Blog key={blog.id} blog={blog} />
+				)}
+			</div>
+			<form onSubmit={addBlog}>
+				<h2>create new:</h2>
+				<div>title:<input 
+						type="text"
+						valuie={title}
+						name="Title"
+						onChange={({target}) => setTitle(target.value)}
+					/>	
+				</div>
+				<div>author:<input
+						type="text"
+						value={author}
+						name="Author"
+						onChange={({target}) => setAuthor(target.value)}
+					/>
+				</div>
+				<div>url:<input 
+						type="text"
+						value={url}
+						name="URL"
+						onChange={({target}) => setUrl(target.value)}
+					/>	
+				</div>
+				<button type="submit">add</button>
+			</form>
 		</div>
 	)
 
@@ -93,7 +141,7 @@ const App = () => {
 			<h1>blogs</h1>
 			<Notification message={errorMessage} />
 			{user === null && loginForm()}
-			{user !== null && showBlogs()}
+			{user !== null && formBlog()}
 		</div>
 	)
 }
