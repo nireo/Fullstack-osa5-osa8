@@ -89,6 +89,10 @@ const App = () => {
 		</div>
 	)
 
+	const handleLike = (blog) => {
+
+	}
+
 	const formBlog = () => (
 		<Togglable buttonLabel="new blog" ref={blogFormRef}>
 			<BlogForm 
