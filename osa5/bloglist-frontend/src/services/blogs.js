@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { async } from 'q';
 const baseUrl = '/api/blogs'
 
 let token = null
@@ -21,9 +22,12 @@ const create = async newObject => {
     return response.data
 }
 
-const update = async (id, newObject) => {
-    const response = await axios.put(`${baseUrl}/${id}`, newObject) 
-    return response.data
+const update =  newObject => {
+    const config = {
+        headers: {Authorization: token}
+    }
+    const request = axios.put(`${baseUrl}/${newObject.id}`, newObject, config)
+    return request.then(response => response.data)
 }
 
-export default { getAll, setToken, create  }
+export default { getAll, setToken, create, update }

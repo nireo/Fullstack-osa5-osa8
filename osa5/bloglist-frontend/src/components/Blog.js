@@ -12,11 +12,13 @@ const Blog = ({ blog, handleLike }) => {
 
     if (showMore) {
         return (
-            <div style={blogStyle} onClick={() => setShowMore(false)}>
+            <div style={blogStyle}>
                 <div>title: {blog.title}</div>
                 <div>author: {blog.author}</div>
                 <div>url: {blog.url}</div>
-                <div>likes: {blog.likes}<button onClick={handleLike}></button></div>
+                <div>likes: {blog.likes}<button onClick={() => handleLike(blog.id)}>like</button>
+                </div>
+                <button onClick={() => setShowMore(false)}>close</button>
             </div>
         )
     }
