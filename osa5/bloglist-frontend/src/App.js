@@ -10,6 +10,7 @@ const App = () => {
 	const [password, setPassword] = useState('')
 	const [user, setUser] = useState(null)
 	const [errorMessage, setErrorMessage] = useState(null)
+	const [successMessage, setSuccessMessage] = useState(null)
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
@@ -48,7 +49,7 @@ const App = () => {
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
-			setErrorMessage('käyttäjätunnus tai salasana virheellinen')
+			setErrorMessage('wrong username or password')
 			setTimeout(() => {
 				setErrorMessage(null)
 			}, 5000)
@@ -65,6 +66,11 @@ const App = () => {
 			likes: 0
 		}
 
+		setSuccessMessage(`a new blog ${title} by ${author}`)
+		setTimeout(() => {
+			setSuccessMessage(null)
+		}, 5000)
+
 		const returnedBlog = await blogService.create(blogObject)
 
 		setBlogs(blogs.concat(returnedBlog))
@@ -73,11 +79,20 @@ const App = () => {
 		setUrl('')
 	}
 
+	const successBox = () => (
+		<div className="success">
+			{successMessage}
+		</div>
+	)
+
 	const formBlog = () => (
 		<div>
 			<div>
 				<h4>{user.name} logged in</h4>
-				<button onClick={() => setUser(null)}>kirjaudu ulos</button>
+				<button onClick={() => {
+					setUser(null);
+					window.localStorage.removeItem('loggedBlogUser')
+				}}>logout</button>
 				{blogs.map(blog =>
 					<Blog key={blog.id} blog={blog} />
 				)}
@@ -140,6 +155,7 @@ const App = () => {
 		<div>
 			<h1>blogs</h1>
 			<Notification message={errorMessage} />
+			{successMessage !== null && successBox()}
 			{user === null && loginForm()}
 			{user !== null && formBlog()}
 		</div>
