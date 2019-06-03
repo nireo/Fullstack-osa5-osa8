@@ -49,6 +49,7 @@ const App = () => {
 
 			blogService.setToken(user.token)
 			setUser(user)
+			console.log(user)
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
@@ -99,6 +100,14 @@ const App = () => {
 			}) 
 	}
 
+	const handleRemove = async id => {
+		const blog = blogs.find(b => b.id === id)
+		if (window.confirm(`are you sure you want to delete ${blog.title} by ${blog.author}`)) {
+			await blogService.remove(blog)
+			setBlogs(blogs.filter(blog => blog.id !== id))
+		}
+	}
+
 	const formBlog = () => (
 		<Togglable buttonLabel="new blog" ref={blogFormRef}>
 			<BlogForm 
@@ -146,7 +155,7 @@ const App = () => {
 
 			<h2>Blogs:</h2>
 			{sortedBlogs.map(blog =>
-				<Blog key={blog.id} blog={blog} handleLike={handleLike} />
+				<Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove}/>
 			)}
 		</div>
 	)

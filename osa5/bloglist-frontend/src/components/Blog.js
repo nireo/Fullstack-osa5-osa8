@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
-const Blog = ({ blog, handleLike }) => {
+
+const Blog = ({ blog, handleLike, handleRemove }) => {
     const [showMore, setShowMore] = useState(false)
 
     const blogStyle = {
@@ -18,7 +19,7 @@ const Blog = ({ blog, handleLike }) => {
                 <div>url: {blog.url}</div>
                 <div>likes: {blog.likes}<button onClick={() => handleLike(blog.id)}>like</button>
                 </div>
-                <button onClick={() => setShowMore(false)}>close</button>
+                <button onClick={() => setShowMore(false)}>close</button><button onClick={() => handleRemove(blog.id)}>delete</button>
             </div>
         )
     }
