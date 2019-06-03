@@ -39,3 +39,5 @@ const BlogForm = ({
         </div>
     )
 }
+
+export default BlogForm

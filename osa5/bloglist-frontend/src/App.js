@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
 import BlogForm from "./components/BlogForm"
+import Togglable from './components/Togglable';
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
@@ -17,7 +18,7 @@ const App = () => {
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
 	const [loginVisible, setLoginVisible] = useState(false)
-
+	const blogFormRef = React.createRef()
 
 	// get blogs to display
 	useEffect(() => {
@@ -89,66 +90,29 @@ const App = () => {
 	)
 
 	const formBlog = () => (
-		<div>
-			<div>
-				<h4>{user.name} logged in</h4>
-				<button onClick={() => {
-					setUser(null);
-					window.localStorage.removeItem('loggedBlogUser')
-				}}>logout</button>
-			</div>
-			<form onSubmit={addBlog}>
-				<h2>create new:</h2>
-				<div>title:<input 
-						type="text"
-						valuie={title}
-						name="Title"
-						onChange={({target}) => setTitle(target.value)}
-					/>	
-				</div>
-				<div>author:<input
-						type="text"
-						value={author}
-						name="Author"
-						onChange={({target}) => setAuthor(target.value)}
-					/>
-				</div>
-				<div>url:<input 
-						type="text"
-						value={url}
-						name="URL"
-						onChange={({target}) => setUrl(target.value)}
-					/>	
-				</div>
-				<button type="submit">add</button>
-			</form>
-		</div>
+		<Togglable buttonLabel="new blog" ref={blogFormRef}>
+			<BlogForm 
+				onSubmit={addBlog}
+				title={title}
+				author={author}
+				url={url}
+				handleTitle={({target}) => setTitle(target.value)}
+				handleAuthor={({target}) => setAuthor(target.value)}
+				handleUrl={({target}) => setUrl(target.value)}
+			/>
+		</Togglable>
 	)
 
 	const loginForm = () => (
-		<div>
-		<form onSubmit={handleLogin}>
-			<div>
-				käyttäjätunnus
-				<input 
-					type="text"
-					value={username}
-					name="Username"
-					onChange={({target}) => setUsername(target.value)}
-				/>
-			</div>
-			<div>
-				salasana
-				<input
-					type="password"
-					value={password}
-					name="Password"
-					onChange={({target}) => setPassword(target.value)}
-				/>
-			</div>
-			<button type="submit">kirjaudu</button>
-		</form>
-		</div>
+		<Togglable buttonLabel="login">
+			<LoginForm 
+				username={username}
+				password={password}
+				handleUsernameChange={({target}) => setUsername(target.value)}
+				handlePasswordChange={({target}) => setPassword(target.value)}
+				handleSubmit={handleLogin}
+			/>
+		</Togglable>
 	)
 
 	return (
@@ -156,11 +120,21 @@ const App = () => {
 			<h1>blogs</h1>
 			<Notification message={errorMessage} />
 			{successMessage !== null && successBox()}
-			{user === null && loginForm()}
-			{user !== null && formBlog()}
+			
+			{user === null ?
+				loginForm() :
+				<div>
+					<p>{user.name} logged <button onClick={() => {
+						localStorage.clear();
+						setUser(null)
+					}}>logout</button></p>
+					{formBlog()}
+				</div>
+			}
+
 			<h2>Blogs:</h2>
 			{blogs.map(blog =>
-					<Blog key={blog.id} blog={blog} />
+				<Blog key={blog.id} blog={blog} />
 			)}
 		</div>
 	)
