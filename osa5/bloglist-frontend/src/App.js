@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from "./components/Notification"
+import LoginForm from "./components/LoginForm"
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
@@ -14,6 +15,7 @@ const App = () => {
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
 	const [url, setUrl] = useState('')
+	const [loginVisible, setLoginVisible] = useState(false)
 
 
 	// get blogs to display
@@ -93,9 +95,6 @@ const App = () => {
 					setUser(null);
 					window.localStorage.removeItem('loggedBlogUser')
 				}}>logout</button>
-				{blogs.map(blog =>
-					<Blog key={blog.id} blog={blog} />
-				)}
 			</div>
 			<form onSubmit={addBlog}>
 				<h2>create new:</h2>
@@ -158,6 +157,10 @@ const App = () => {
 			{successMessage !== null && successBox()}
 			{user === null && loginForm()}
 			{user !== null && formBlog()}
+			<h2>Blogs:</h2>
+			{blogs.map(blog =>
+					<Blog key={blog.id} blog={blog} />
+			)}
 		</div>
 	)
 }
