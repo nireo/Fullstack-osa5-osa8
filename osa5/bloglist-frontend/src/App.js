@@ -6,6 +6,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { useField } from './hooks'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
@@ -34,7 +35,7 @@ const App = () => {
 			setUser(user)
 			blogService.setToken(user.token)
 		}
-	})
+	}, [])
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
@@ -49,7 +50,6 @@ const App = () => {
 
 			blogService.setToken(user.token)
 			setUser(user)
-			console.log(user)
 			setUsername('')
 			setPassword('')
 		} catch (exception) {
@@ -90,10 +90,8 @@ const App = () => {
 	)
 
 	const handleLike = id => {
-
 		const blog = blogs.find(b => b.id === id)
 		const changedBlog = { ...blog, likes: blog.likes + 1 }
-
 		blogService.update(changedBlog)
 			.then(returnedBlog => {
 				setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
@@ -106,7 +104,6 @@ const App = () => {
 			await blogService.remove(blog)
 			setBlogs(blogs.filter(blog => blog.id !== id))
 		}
-	
 	}
 
 	const formBlog = () => (
