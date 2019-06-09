@@ -24,11 +24,12 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
 		)
 	}
 
+		
 	return (
 		<div style={blogStyle} onClick={() => setShowMore(true)}>
 			{blog.title} {blog.author}
 		</div>
-	)
+	) 
 }
 
 export default Blog
