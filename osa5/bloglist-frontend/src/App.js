@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Notification from "./components/Notification"
-import LoginForm from "./components/LoginForm"
-import BlogForm from "./components/BlogForm"
-import Togglable from './components/Togglable';
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
@@ -84,7 +84,7 @@ const App = () => {
 	}
 
 	const successBox = () => (
-		<div className="success">
+		<div className='success'>
 			{successMessage}
 		</div>
 	)
@@ -92,7 +92,7 @@ const App = () => {
 	const handleLike = id => {
 
 		const blog = blogs.find(b => b.id === id)
-		const changedBlog = {...blog, likes: blog.likes + 1}
+		const changedBlog = { ...blog, likes: blog.likes + 1 }
 
 		blogService.update(changedBlog)
 			.then(returnedBlog => {
@@ -111,26 +111,26 @@ const App = () => {
 	}
 
 	const formBlog = () => (
-		<Togglable buttonLabel="new blog" ref={blogFormRef}>
+		<Togglable buttonLabel='new blog' ref={blogFormRef}>
 			<BlogForm 
 				onSubmit={addBlog}
 				title={title}
 				author={author}
 				url={url}
-				handleTitle={({target}) => setTitle(target.value)}
-				handleAuthor={({target}) => setAuthor(target.value)}
-				handleUrl={({target}) => setUrl(target.value)}
+				handleTitle={({ target }) => setTitle(target.value)}
+				handleAuthor={({ target }) => setAuthor(target.value)}
+				handleUrl={({ target }) => setUrl(target.value)}
 			/>
 		</Togglable>
 	)
 
 	const loginForm = () => (
-		<Togglable buttonLabel="login">
+		<Togglable buttonLabel='login'>
 			<LoginForm 
 				username={username}
 				password={password}
-				handleUsernameChange={({target}) => setUsername(target.value)}
-				handlePasswordChange={({target}) => setPassword(target.value)}
+				handleUsernameChange={({ target }) => setUsername(target.value)}
+				handlePasswordChange={({ target }) => setPassword(target.value)}
 				handleSubmit={handleLogin}
 			/>
 		</Togglable>
@@ -148,7 +148,7 @@ const App = () => {
 				loginForm() :
 				<div>
 					<p>{user.name} logged <button onClick={() => {
-						localStorage.clear();
+						localStorage.clear()
 						setUser(null)
 					}}>logout</button></p>
 					{formBlog()}
@@ -157,7 +157,7 @@ const App = () => {
 
 			<h2>Blogs:</h2>
 			{sortedBlogs.map(blog =>
-				<Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove}/>
+				<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove }/>
 			)}
 		</div>
 	)
