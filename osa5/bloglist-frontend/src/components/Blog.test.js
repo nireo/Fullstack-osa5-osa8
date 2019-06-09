@@ -24,7 +24,7 @@ test('renders content', () => {
 	)
 })
 
-test('clicking like 2 times sets 2 mock calls', () => {
+/* test('clicking like 2 times sets 2 mock calls', () => {
 	const blog = {
 		title: 'Like test blog',
 		author: 'the dev',
@@ -36,11 +36,11 @@ test('clicking like 2 times sets 2 mock calls', () => {
 
 	const { getByText } = render(
 		<Blog blog={blog} handleLike={mockHandler} /> 
-	)
+	)   
 
 	const button = getByText('like')
 	fireEvent.click(button)
 	fireEvent.click(button)
 
 	expect(mockHandler.mock.calls.length).toBe(2)
-})
+})  */
