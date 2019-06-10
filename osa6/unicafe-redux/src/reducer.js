@@ -22,7 +22,10 @@ const initialState = {
           bad: state.bad + 1
         }
       case 'ZERO':
-        return state 
+        state.good = 0
+        state.ok = 0
+        state.bad = 0
+        return state
       default: return state
     } 
   }
