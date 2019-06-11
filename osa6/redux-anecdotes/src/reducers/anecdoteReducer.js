@@ -17,17 +17,16 @@ const asObject = (anecdote) => {
   }
 }
 
+
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action, id) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-
-  if (action.type == 'VOTE') {
-      let voted = state.find(a => a.id === id)
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'NEW_ANEC':
+      return [...state, action.data]
+    default:
+      return state
   }
-
-  return state
 }
 
 export const createAnecdote = content => {
