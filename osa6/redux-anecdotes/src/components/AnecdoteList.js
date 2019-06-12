@@ -4,6 +4,8 @@ import { setNotification } from "../reducers/notificationReducer"
 
 const AnecdoteList = ({store}) => {
     const anecdotes = store.getState().anecdotes
+    const filter = store.getState().filter
+
     const vote = id => {
         store.dispatch(
             addVote(id),
@@ -22,11 +24,13 @@ const AnecdoteList = ({store}) => {
     }
 
     const sortedAnecdotes = anecdotes.sort((a, b) => (a.votes < b.votes) ? 1 : -1)
+    const filteredSearch = 
+        filter ? sortedAnecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase())) : sortedAnecdotes
 
     return (
         <div>
             <h1>Anecdotes</h1>
-            {sortedAnecdotes.map(anecdote =>
+            {filteredSearch.map(anecdote =>
                 <div key={anecdote.id}>
                 <div>
                     {anecdote.content}
