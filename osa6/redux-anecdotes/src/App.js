@@ -6,7 +6,7 @@ import Notification from "./components/Notification"
 const App = ({store}) => {
   return (
     <div>
-      <Notification />
+      <Notification store={store}/>
       <AnecdoteList store={store} />
       <NewAnecdote store={store}/>
     </div>
