@@ -1,11 +1,15 @@
 import React from 'react';
 import NewAnecdote from "./components/NewAnecdote"
+import { addVote } from "./reducers/anecdoteReducer"
 
-const App = (props) => {
-  const anecdotes = props.store.getState()
+const App = ({store}) => {
+  const anecdotes = store.getState()
   
-  const vote = (id) => {
-    console.log('vote', id)
+  const vote = id => {
+    console.log("id", id)
+    store.dispatch(
+      addVote(id)
+    )
   }
   
   return (
@@ -23,7 +27,7 @@ const App = (props) => {
         </div>
       )}
       <h2>create new</h2>
-      <NewAnecdote store={props.store}/>
+      <NewAnecdote store={store}/>
     </div>
   )
 }
