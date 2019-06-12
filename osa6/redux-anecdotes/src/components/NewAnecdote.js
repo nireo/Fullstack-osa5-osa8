@@ -5,8 +5,7 @@ const NewAnecdote = ({store}) => {
     const addAnecdote = event => {
         event.preventDefault()
         store.dispatch(
-            createAnecdote(event.target.anecdote.value)
-        )
+            createAnecdote(event.target.anecdote.value))
         event.target.anecdote.value = ''
     }
 

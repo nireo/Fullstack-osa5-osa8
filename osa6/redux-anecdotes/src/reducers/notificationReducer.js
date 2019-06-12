@@ -1,20 +1,19 @@
 const reducer = (state = null, action) => {
     switch (action.type) {
-        case 'ADD_NOTIFICATION':
-            const id = action.data.id
-            const anecdoteObject = state.find(
-                a => a.id === id
-            )
-            return anecdoteObject.content
+        case 'VOTE_NOTIFICATION':
+            if (action.data.content === null) {
+                return null
+            }
+            return `you voted '${action.data.content}'`
         default:
             return state
     }
 }
 
-export const setNotification = id => {
+export const setNotification = content => {
     return {
-        type: 'ADD_NOTIFICATION',
-        data: { id }
+        type: 'VOTE_NOTIFICATION',
+        data: { content }
     }
 }
 
