@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import App from './App'
-import reducer from './reducers/anecdoteReducer'
+import reducer, { initializeAnecdotes } from './reducers/anecdoteReducer'
 import notificationReducer from './reducers/notificationReducer'
 import filterReducer from './reducers/filterReducer'
+import anecdoteService from "./services/anecdote"
 
 const combined = combineReducers({
   anecdotes: reducer,
@@ -14,6 +15,10 @@ const combined = combineReducers({
 })
 
 const store = createStore(combined)
+
+anecdoteService.getAll().then(anecdotes => {
+  store.dispatch(initializeAnecdotes(anecdotes))
+}) 
 
 const render = () => {
   ReactDOM.render(
