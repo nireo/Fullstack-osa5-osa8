@@ -22,7 +22,7 @@ const Anecdotes = (props) => {
         <div>
             has {anecdote.votes}
             <button onClick={() => {
-                props.addVote(anecdote.id)
+                props.addVote(anecdote)
                 notification(anecdote.content)
             }}>vote</button>
         </div>

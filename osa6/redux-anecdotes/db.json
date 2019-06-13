@@ -42,8 +42,8 @@
     },
     {
       "content": "another test",
-      "votes": 0,
-      "id": 9
+      "id": 9,
+      "votes": 2
     }
   ]
 }
