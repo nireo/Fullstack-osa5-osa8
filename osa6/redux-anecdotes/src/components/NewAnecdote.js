@@ -20,7 +20,11 @@ const NewAnecdote = (props) => {
     )
 }
 
+const mapDispatchToProps = {
+    createAnecdote
+}
+
 export default connect(
     null,
-    { createAnecdote }
+    { mapDispatchToProps }
 )(NewAnecdote)
