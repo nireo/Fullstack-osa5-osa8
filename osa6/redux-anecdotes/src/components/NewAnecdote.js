@@ -3,9 +3,11 @@ import { connect } from "react-redux"
 import { createAnecdote } from "../reducers/anecdoteReducer"
 
 const NewAnecdote = (props) => {
+    console.log(createAnecdote)
+    console.log(props.createAnecdote)
     const addAnecdote = event => {
         event.preventDefault()
-        props.createAnecdote(createAnecdote(event.target.anecdote.value))
+        props.createAnecdote(event.target.anecdote.value)
         event.target.anecdote.value = ''
     }
 
@@ -20,11 +22,7 @@ const NewAnecdote = (props) => {
     )
 }
 
-const mapDispatchToProps = {
-    createAnecdote
-}
-
 export default connect(
     null,
-    { mapDispatchToProps }
+    { createAnecdote }
 )(NewAnecdote)
