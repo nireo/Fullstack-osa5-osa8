@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { addVote } from "../reducers/anecdoteReducer"
 import { setNotification } from "../reducers/notificationReducer"
 
-const Anecdotes = props => {
+const Anecdotes = (props) => {
     const notification = content => {
         props.setNotification(content)
         setTimeout(() => {
@@ -14,7 +14,7 @@ const Anecdotes = props => {
     return ( 
     <div>
     <h1>Anecdotes</h1>
-    {props.anecdotes.map(anecdote =>
+    {props.visibleAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
         <div>
             {anecdote.content}
@@ -42,8 +42,7 @@ const toShow = ({anecdotes, filter}) => {
 
 const mapStateToProps = (state) => {
     return {
-      anecdotes: state.anecdotes,
-      filter: state.filter
+      visibleAnecdotes: toShow(state)
     }
 }
 
