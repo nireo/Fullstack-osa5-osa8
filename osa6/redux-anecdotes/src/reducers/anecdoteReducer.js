@@ -1,5 +1,3 @@
-  const getId = () => (100000 * Math.random()).toFixed(0)
-
 const reducer = (state = [], action) => {
   switch (action.type) {
     case 'NEW_ANEC':
