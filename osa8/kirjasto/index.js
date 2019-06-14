@@ -113,6 +113,10 @@ const typeDefs = gql`
 			author: String!
 			genres: [String!]!
 		): Book
+		editAuthor(
+			name: String!
+			setBornTo: Int!
+		): Author
 	}
 `
 
@@ -156,17 +160,29 @@ const resolvers = {
     }
   },
   Mutation: {
-	  addBook: (root, args) => {
-		  if (books.find(b => b.title === args.title)) {
-			  throw new UserInputError('title must be unique', {
-				  invalidArgs: args.title
-			  })
-		  }
-		  const book = { ...args, id: uuid() }
-		  books = books.concat(book)
-		  return book
-	  }
-  }
+		addBook: (root, args) => {
+			if (books.find(b => b.title === args.title)) {
+				throw new UserInputError('title must be unique', {
+					invalidArgs: args.title
+				})
+			}
+			const book = { ...args, id: uuid() }
+			books = books.concat(book)
+			return book
+		},
+		editAuthor: (root, args) => {
+			if (args.setBornTo === undefined) {
+				return null
+			}
+			const author = authors.find(a => a.name === args.name)
+			if (!author) {
+				return null
+			}
+			const updatedAuthor = { ...args, born: args.setBornTo }
+			authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
+			return updatedAuthor
+		}
+ 	 }
 }
 
 const server = new ApolloServer({
