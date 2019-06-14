@@ -3,121 +3,126 @@ const uuid = require('uuid/v1')
 
 
 const authors = [
-  {
-    name: 'Robert Martin',
-    id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
-    born: 1952,
-  },
-  {
-    name: 'Martin Fowler',
-    id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
-    born: 1963
-  },
-  {
-    name: 'Fyodor Dostoevsky',
-    id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
-    born: 1821
-  },
-  { 
-    name: 'Joshua Kerievsky', // birthyear not known
-    id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
-  },
-  { 
-    name: 'Sandi Metz', // birthyear not known
-    id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
-  },
+	{
+		name: 'Robert Martin',
+		id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
+		born: 1952,
+	},
+	{
+		name: 'Martin Fowler',
+		id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
+		born: 1963
+	},
+	{
+		name: 'Fyodor Dostoevsky',
+		id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
+		born: 1821
+	},
+	{ 
+		name: 'Joshua Kerievsky', // birthyear not known
+		id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
+	},
+	{ 
+		name: 'Sandi Metz', // birthyear not known
+		id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
+	},
 ]
 
 const books = [
-  {
-    title: 'Clean Code',
-    published: 2008,
-    author: 'Robert Martin',
-    id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring']
-  },
-  {
-    title: 'Agile software development',
-    published: 2002,
-    author: 'Robert Martin',
-    id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
-    genres: ['agile', 'patterns', 'design']
-  },
-  {
-    title: 'Refactoring, edition 2',
-    published: 2018,
-    author: 'Martin Fowler',
-    id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring']
-  },
-  {
-    title: 'Refactoring to patterns',
-    published: 2008,
-    author: 'Joshua Kerievsky',
-    id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring', 'patterns']
-  },  
-  {
-    title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
-    published: 2012,
-    author: 'Sandi Metz',
-    id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring', 'design']
-  },
-  {
-    title: 'Crime and punishment',
-    published: 1866,
-    author: 'Fyodor Dostoevsky',
-    id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
-    genres: ['classic', 'crime']
-  },
-  {
-    title: 'The Demon ',
-    published: 1872,
-    author: 'Fyodor Dostoevsky',
-    id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
-    genres: ['classic', 'revolution']
-  },
+	{
+		title: 'Clean Code',
+		published: 2008,
+		author: 'Robert Martin',
+		id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
+		genres: ['refactoring']
+	},
+	{
+		title: 'Agile software development',
+		published: 2002,
+		author: 'Robert Martin',
+		id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
+		genres: ['agile', 'patterns', 'design']
+	},
+	{
+		title: 'Refactoring, edition 2',
+		published: 2018,
+		author: 'Martin Fowler',
+		id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
+		genres: ['refactoring']
+	},
+	{
+		title: 'Refactoring to patterns',
+		published: 2008,
+		author: 'Joshua Kerievsky',
+		id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
+		genres: ['refactoring', 'patterns']
+	},  
+	{
+		title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
+		published: 2012,
+		author: 'Sandi Metz',
+		id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
+		genres: ['refactoring', 'design']
+	},
+	{
+		title: 'Crime and punishment',
+		published: 1866,
+		author: 'Fyodor Dostoevsky',
+		id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
+		genres: ['classic', 'crime']
+	},
+	{
+		title: 'The Demon ',
+		published: 1872,
+		author: 'Fyodor Dostoevsky',
+		id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
+		genres: ['classic', 'revolution']
+	},
 ]
 
 const typeDefs = gql`
-  type Book {
-    title: String!
-    published: Int!
-    author: String!
-    id: ID!
-    genres: [String!]!
-  }
+	type Book {
+		title: String!
+		published: Int!
+		author: String!
+		id: ID!
+		genres: [String!]!
+	}
 
-  type Author {
-    name: String!
-    id: ID!
-    born: String
-    bookCount: Int!
-  }
+	type Author {
+		name: String!
+		id: ID!
+		born: String
+		bookCount: Int!
+	}
 
-  type Query {
-    authorCount: Int!
-    bookCount: Int!
-    allBooks: [Book!]!
-    allAuthors: [Author!]!
-  }
+	type Query {
+		authorCount: Int!
+		bookCount: Int!
+		allBooks(name: String): [Book!]!
+		allAuthors: [Author!]!
+	}
 `
 
 const resolvers = {
   Query: {
     authorCount: () => authors.length,
     bookCount: () => books.length,
-    allBooks: () => books,
+    allBooks: (root, args) => {
+		if (args.name === undefined) {
+			return books
+		}
+		return books.filter(book => book.author === args.name)
+    },
     allAuthors: () => authors
   },
   Author: {
     bookCount: (root) => {
       let count = 0
       books.forEach(book => {
-        if (book.id === root.id) {
-          count += 1
-       }
+		if (book.id === root.id) {
+			count += 1
+		}
       })
       return count
     }
@@ -125,10 +130,10 @@ const resolvers = {
 }
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+	typeDefs,
+	resolvers,
 })
 
 server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`)
+	console.log(`Server ready at ${url}`)
 })
