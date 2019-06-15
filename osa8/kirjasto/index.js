@@ -152,7 +152,7 @@ const resolvers = {
     bookCount: (root) => {
       let count = 0
       books.forEach(book => {
-		if (book.id === root.id) {
+		if (book.author === root.name) {
 			count += 1
 		}
       })
