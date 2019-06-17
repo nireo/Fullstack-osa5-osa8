@@ -6,7 +6,6 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-import { useField } from './hooks'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
@@ -35,7 +34,7 @@ const App = () => {
 			setUser(user)
 			blogService.setToken(user.token)
 		}
-	}, [])
+	})
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
@@ -131,8 +130,11 @@ const App = () => {
 			/>
 		</Togglable>
 	)
-
-	const sortedBlogs = blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1)
+	
+	/* 
+	handleUsernameChange={({ target }) => setUsername(target.value)}
+	handlePasswordChange={({ target }) => setPassword(target.value)} */
+	const sortedBlogs = blogs.sort((a, b) => (a.likes <= b.likes) ? 1 : -1)
 
 	return (
 		<div>
