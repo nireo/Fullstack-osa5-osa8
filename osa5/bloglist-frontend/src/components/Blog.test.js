@@ -24,7 +24,7 @@ test('renders content', () => {
 	)
 })
 
-/* test('clicking like 2 times sets 2 mock calls', () => {
+test('clicking like 2 times sets 2 mock calls', () => {
 	const blog = {
 		title: 'Like test blog',
 		author: 'the dev',
@@ -35,7 +35,7 @@ test('renders content', () => {
 	const mockHandler = jest.fn()
 
 	const { getByText } = render(
-		<Blog blog={blog} handleLike={mockHandler} /> 
+		<Blog blog={blog} handleLike={mockHandler} showState={true} /> 
 	)   
 
 	const button = getByText('like')
@@ -43,5 +43,5 @@ test('renders content', () => {
 	fireEvent.click(button)
 
 	expect(mockHandler.mock.calls.length).toBe(2)
-})  */
+})  
 

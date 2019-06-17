@@ -152,10 +152,9 @@ const App = () => {
 					{formBlog()}
 				</div>
 			}
-
 			<h2>Blogs:</h2>
 			{sortedBlogs.map(blog =>
-				<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove }/>
+				<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
 			)}
 		</div>
 	)

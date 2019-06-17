@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike, handleRemove }) => {
-	const [showMore, setShowMore] = useState(false)
+const Blog = ({ blog, handleLike, handleRemove, showState }) => {
+	const [showMore, setShowMore] = useState(showState)
 
 	const blogStyle = {
 		paddingTop: 10,
