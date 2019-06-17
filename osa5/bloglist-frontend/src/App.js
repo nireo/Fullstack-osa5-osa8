@@ -15,9 +15,9 @@ const App = () => {
 	const [user, setUser] = useState(null)
 	const [errorMessage, setErrorMessage] = useState(null)
 	const [successMessage, setSuccessMessage] = useState(null)
-	const [title, setTitle] = useState('')
-	const [author, setAuthor] = useState('')
-	const [url, setUrl] = useState('')
+	const title = useField('text')
+	const author = useField('text')
+	const url = useField('text')
 	const blogFormRef = React.createRef()
 
 	// get blogs to display
@@ -45,11 +45,9 @@ const App = () => {
 				username: username.value, 
 				password: password.value,
 			})
-			
 			window.localStorage.setItem(
 				'loggedBlogUser', JSON.stringify(user)
 			)
-
 			blogService.setToken(user.token)
 			setUser(user)
 		} catch (exception) {
@@ -64,13 +62,13 @@ const App = () => {
 		event.preventDefault()
 
 		const blogObject = {
-			title: title,
-			author: author,
-			url: url,
+			title: title.value,
+			author: author.value,
+			url: url.value,
 			likes: 0
 		}
 
-		setSuccessMessage(`a new blog ${title} by ${author}`)
+		setSuccessMessage(`a new blog ${title.value} by ${author.value}`)
 		setTimeout(() => {
 			setSuccessMessage(null)
 		}, 5000)
@@ -78,9 +76,6 @@ const App = () => {
 		const returnedBlog = await blogService.create(blogObject)
 
 		setBlogs(blogs.concat(returnedBlog))
-		setTitle('')
-		setAuthor('')
-		setUrl('')
 	}
 
 	const successBox = () => (
@@ -113,9 +108,6 @@ const App = () => {
 				title={title}
 				author={author}
 				url={url}
-				handleTitle={({ target }) => setTitle(target.value)}
-				handleAuthor={({ target }) => setAuthor(target.value)}
-				handleUrl={({ target }) => setUrl(target.value)}
 			/>
 		</Togglable>
 	)
