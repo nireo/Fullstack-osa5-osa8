@@ -131,6 +131,17 @@ const App = () => {
 		</Togglable>
 	)
 	
+	const renderBlogs = () => {
+		return (
+			<div>
+				<h2>Blogs:</h2>
+				{sortedBlogs.map(blog =>
+					<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
+				)}
+			</div>
+		)
+	}
+
 	/* 
 	handleUsernameChange={({ target }) => setUsername(target.value)}
 	handlePasswordChange={({ target }) => setPassword(target.value)} */
@@ -150,12 +161,9 @@ const App = () => {
 						setUser(null)
 					}}>logout</button></p>
 					{formBlog()}
+					{renderBlogs()}
 				</div>
 			}
-			<h2>Blogs:</h2>
-			{sortedBlogs.map(blog =>
-				<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
-			)}
 		</div>
 	)
 }

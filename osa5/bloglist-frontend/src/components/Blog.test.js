@@ -5,6 +5,13 @@ import Blog from './Blog'
 
 afterEach(cleanup)
 
+const Wrapper = (props) => {
+    
+	const onChange = (event) => {
+		props.state.value = event.target.value
+	}
+} 
+
 test('renders content', () => {
 	const blog = {
 		title: 'React test blog',
