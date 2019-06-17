@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 
 const LoginForm = ({
 	handleSubmit,
-	handleUsernameChange,
-	handlePasswordChange,
 	username,
 	password
 }) => {
@@ -16,16 +14,13 @@ const LoginForm = ({
 				<div>
             käyttäjätunnus
 					<input
-						value={ username }
-						onChange={ handleUsernameChange }
+						{ ...username }
 					/>
 				</div>
 				<div>
             salasana
 					<input
-						type='password'
-						value={ password }
-						onChange={ handlePasswordChange }
+						{ ...password }
 					/>
 				</div>
 				<button type='submit'>kirjaudu</button>

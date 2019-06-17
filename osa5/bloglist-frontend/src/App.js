@@ -6,11 +6,12 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { useField } from './hooks/index'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
-	const [username, setUsername] = useState('')
-	const [password, setPassword] = useState('')
+	const username = useField('text')
+	const password = useField('password')
 	const [user, setUser] = useState(null)
 	const [errorMessage, setErrorMessage] = useState(null)
 	const [successMessage, setSuccessMessage] = useState(null)
@@ -38,9 +39,11 @@ const App = () => {
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
+
 		try {
 			const user = await loginService.login({
-				username, password,
+				username: username.value, 
+				password: password.value,
 			})
 			
 			window.localStorage.setItem(
@@ -49,8 +52,6 @@ const App = () => {
 
 			blogService.setToken(user.token)
 			setUser(user)
-			setUsername('')
-			setPassword('')
 		} catch (exception) {
 			setErrorMessage('wrong username or password')
 			setTimeout(() => {
@@ -124,8 +125,6 @@ const App = () => {
 			<LoginForm 
 				username={username}
 				password={password}
-				handleUsernameChange={({ target }) => setUsername(target.value)}
-				handlePasswordChange={({ target }) => setPassword(target.value)}
 				handleSubmit={handleLogin}
 			/>
 		</Togglable>
