@@ -43,5 +43,27 @@ test('clicking like 2 times sets 2 mock calls', () => {
 	fireEvent.click(button)
 
 	expect(mockHandler.mock.calls.length).toBe(2)
-})  
+}) 
 
+test('when blog hasnt been clicked display only name and author', () => {
+	const blog = {
+		title: 'blog show test',
+		author: 'the dev',
+		url: 'localhost',
+		likes: 0
+	}
+
+	const component = render(
+		<Blog blog={blog} showState={false}/>
+	)
+
+	// check for blog title
+	expect(component.container).toHaveTextContent(
+		'blog show test'
+	)
+
+	// check that there isn't a url part
+	expect(component.container).not.toHaveTextContent(
+		'localhost'
+	)
+})
