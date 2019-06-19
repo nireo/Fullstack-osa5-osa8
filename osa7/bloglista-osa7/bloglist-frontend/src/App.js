@@ -93,11 +93,8 @@ const App = (props) => {
 		// find specific object from all of the objects
 		const blog = blogs.find(b => b.id === id)
 
-		// add like
-		const changedBlog = { ...blog, likes: blog.likes + 1 }
-
 		// call axios method to send the updated blog to the back-end
-		props.addLike(changedBlog)
+		props.addLike(blog)
 	}
 
 	const handleRemove = async id => {

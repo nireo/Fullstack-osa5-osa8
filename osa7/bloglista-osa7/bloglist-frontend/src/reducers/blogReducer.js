@@ -7,14 +7,7 @@ const reducer = (state = [], action) => {
         case 'INIT_BLOGS':
             return action.data
         case 'ADD_LIKE':
-            const id = action.data.id
-            const toBeLiked = state.find(
-                b => b.id === id
-            )
-            const liked = {
-                ...toBeLiked, votes: toBeLiked.votes + 1
-            }
-            return state.map(b => b.id !== action.data.id ? b : action.data)
+            return state.map(b => b.id === action.data.id ? action.data : b)
         default:
             return state
     }
@@ -31,8 +24,9 @@ export const createBlog = content => {
 }
 
 export const addLike = blog => {
+    const likeTemplate = {...blog, likes: blog.likes + 1}
     return async dispatch => {
-        const likeBlog = await blogService.update(blog.id, {...blog, likes: blog.likes + 1})
+        const likeBlog = await blogService.update(likeTemplate)
         dispatch({
             type: 'ADD_LIKE',
             data: likeBlog
