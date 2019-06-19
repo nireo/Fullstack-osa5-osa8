@@ -1,3 +1,4 @@
+// commented some of the code so I can come back to it
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -7,24 +8,24 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import { useField } from './hooks/index'
+import { setNotification, clearNotification } from './reducers/notificationReducer'
+import { connect } from 'react-redux'
+import { initializeBlogs, addLike, createBlog } from './reducers/blogReducer'
 
-const App = () => {
-	const [blogs, setBlogs] = useState([])
+const App = (props) => {
+	// general variable, hook and state definitions
 	const username = useField('text')
 	const password = useField('password')
 	const [user, setUser] = useState(null)
-	const [errorMessage, setErrorMessage] = useState(null)
-	const [successMessage, setSuccessMessage] = useState(null)
 	const title = useField('text')
 	const author = useField('text')
 	const url = useField('text')
 	const blogFormRef = React.createRef()
+	const blogs = props.blogs
 
 	// get blogs to display
 	useEffect(() => {
-		blogService.getAll().then(blogs =>
-			setBlogs( blogs )
-		)  
+		props.initializeBlogs()
 	}, [])
 
 	// get browser localStorage for logged user
@@ -39,28 +40,33 @@ const App = () => {
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
-
 		try {
+			// use credentials
 			const user = await loginService.login({
 				username: username.value, 
 				password: password.value,
 			})
+
+			// set the localStorage for keeping user logged in 
 			window.localStorage.setItem(
 				'loggedBlogUser', JSON.stringify(user)
 			)
 			blogService.setToken(user.token)
+			// set user with state
 			setUser(user)
 		} catch (exception) {
-			setErrorMessage('wrong username or password')
-			setTimeout(() => {
-				setErrorMessage(null)
-			}, 5000)
+			// if wrong credentials, since back-end doesn't
+			// recognise items and throws an error
+			props.setNotification('wrong username or password', 3)
 		}
 	}
 
 	const addBlog = async (event) => {
 		event.preventDefault()
 
+
+
+		// place all values to 1 object since axios only sends 1 object
 		const blogObject = {
 			title: title.value,
 			author: author.value,
@@ -68,39 +74,47 @@ const App = () => {
 			likes: 0
 		}
 
-		setSuccessMessage(`a new blog ${title.value} by ${author.value}`)
-		setTimeout(() => {
-			setSuccessMessage(null)
-		}, 5000)
 
+		// if all went well display message
+		props.setNotification(`you added blog ${title.value} by ${author.value}`, 5)
+
+		// wait for the service method to successfully send the new object 
+		// to the back end
 		const returnedBlog = await blogService.create(blogObject)
+		props.createBlog(returnedBlog)
 
-		setBlogs(blogs.concat(returnedBlog))
+		// clear the input fields
+		title.reset()
+		author.reset()
+		url.reset()
 	}
 
-	const successBox = () => (
-		<div className='success'>
-			{successMessage}
-		</div>
-	)
-
 	const handleLike = id => {
+		// find specific object from all of the objects
 		const blog = blogs.find(b => b.id === id)
+
+		// add like
 		const changedBlog = { ...blog, likes: blog.likes + 1 }
-		blogService.update(changedBlog)
-			.then(returnedBlog => {
-				setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
-			}) 
+
+		// call axios method to send the updated blog to the back-end
+		props.addLike(changedBlog)
 	}
 
 	const handleRemove = async id => {
+		// find specific blog since every blog has unique id
 		const blog = blogs.find(b => b.id === id)
+
+		// request confirmation from user to prevent accidental deletes
 		if (window.confirm(`are you sure you want to delete ${blog.title} by ${blog.author}`)) {
+			// wait for axios method 
 			await blogService.remove(blog)
-			setBlogs(blogs.filter(blog => blog.id !== id))
+
+			// after that filter blogs that don't have the given id
+			props.initializeBlogs(blogs.filter(blog => blog.id !== id))
 		}
 	}
 
+	// the blog form component
 	const formBlog = () => (
 		<Togglable buttonLabel='new blog' ref={blogFormRef}>
 			<BlogForm 
@@ -112,6 +126,7 @@ const App = () => {
 		</Togglable>
 	)
 
+	// login form component
 	const loginForm = () => (
 		<Togglable buttonLabel='login'>
 			<LoginForm 
@@ -123,7 +138,7 @@ const App = () => {
 	)	
 	
 	const byLikes = (b1, b2) => b2.likes - b1.likes
-	const sortedBlogs = blogs.sort(byLikes)
+	const sortedBlogs = props.blogs.sort(byLikes)
 	
 	const renderBlogs = () => {
 		return (
@@ -139,9 +154,13 @@ const App = () => {
 	return (
 		<div>
 			<h1>blogs</h1>
-			<Notification message={errorMessage} />
-			{successMessage !== null && successBox()}
-			
+			<Notification />
+			{ 
+				// check if there is logged in user
+				// if it finds a logged user in localStorage or 
+				// user inputs correct credentials
+				// then render menu with blogs and a logout button
+			}
 			{user === null ?
 				loginForm() :
 				<div>
@@ -157,4 +176,18 @@ const App = () => {
 	)
 }
 
-export default App
+const mapStateToProps = (state) => {
+	return {
+		blogs: state.blogs
+	}
+}
+
+const mapDispatchToProps = {
+	initializeBlogs,
+	setNotification,
+	clearNotification,
+	addLike,
+	createBlog
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

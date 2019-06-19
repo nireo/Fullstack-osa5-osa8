@@ -11,15 +11,21 @@ const BlogForm = ({
 			<form onSubmit={onSubmit}>
 				<h2>create new:</h2>
 				<div>title:<input 
-					{...title}
+					  value={title.value} 
+					  type={title.type}
+					  onChange={title.onChange}
 				/>	
 				</div>
 				<div>author:<input
-					{...author}
+					value={author.value}
+					type={author.type}
+					onChange={author.onChange}
 				/>
 				</div>
 				<div>url:<input 
-					{...url}
+					value={url.value}
+					type={url.type}
+					onChange={url.onChange}
 				/>	
 				</div>
 				<button type="submit">add</button>
