@@ -11,17 +11,18 @@ import { useField } from './hooks/index'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { connect } from 'react-redux'
 import { initializeBlogs, addLike, createBlog } from './reducers/blogReducer'
+import { logIn, logOut } from './reducers/userReducer'
 
 const App = (props) => {
 	// general variable, hook and state definitions
 	const username = useField('text')
 	const password = useField('password')
-	const [user, setUser] = useState(null)
 	const title = useField('text')
 	const author = useField('text')
 	const url = useField('text')
 	const blogFormRef = React.createRef()
 	const blogs = props.blogs
+	const user = props.user
 
 	// get blogs to display
 	useEffect(() => {
@@ -33,7 +34,7 @@ const App = (props) => {
 		const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
 		if (loggedUserJSON) {
 			const user = JSON.parse(loggedUserJSON)
-			setUser(user)
+			logIn(user)
 			blogService.setToken(user.token)
 		}
 	})
@@ -53,7 +54,7 @@ const App = (props) => {
 			)
 			blogService.setToken(user.token)
 			// set user with state
-			setUser(user)
+			props.logIn(user)
 		} catch (exception) {
 			// if wrong credentials, since back-end doesn't
 			// recognise items and throws an error
@@ -64,8 +65,6 @@ const App = (props) => {
 	const addBlog = async (event) => {
 		event.preventDefault()
 
-
-
 		// place all values to 1 object since axios only sends 1 object
 		const blogObject = {
 			title: title.value,
@@ -73,7 +72,6 @@ const App = (props) => {
 			url: url.value,
 			likes: 0
 		}
-
 
 		// if all went well display message
 		props.setNotification(`you added blog ${title.value} by ${author.value}`, 5)
@@ -163,7 +161,7 @@ const App = (props) => {
 				<div>
 					<p>{user.name} logged <button onClick={() => {
 						localStorage.clear()
-						setUser(null)
+						props.logOut()
 					}}>logout</button></p>
 					{formBlog()}
 					{renderBlogs()}
@@ -175,7 +173,8 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		blogs: state.blogs
+		blogs: state.blogs,
+		user: state.user
 	}
 }
 
@@ -184,7 +183,9 @@ const mapDispatchToProps = {
 	setNotification,
 	clearNotification,
 	addLike,
-	createBlog
+	createBlog,
+	logIn,
+	logOut
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
