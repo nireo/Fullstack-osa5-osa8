@@ -36,7 +36,7 @@ export const addLike = blog => {
 
 export const initializeBlogs = () => {
     return async dispatch => {
-        const blogs = await blogService.getAll()
+        const blogs = await blogService.getAll('/api/blogs')
         dispatch({
             type: 'INIT_BLOGS',
             data: blogs

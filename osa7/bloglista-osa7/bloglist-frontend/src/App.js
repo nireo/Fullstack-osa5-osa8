@@ -1,8 +1,7 @@
 // commented some of the code so I can come back to it
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -11,7 +10,13 @@ import { useField } from './hooks/index'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { connect } from 'react-redux'
 import { initializeBlogs, addLike, createBlog } from './reducers/blogReducer'
-import { logIn, logOut } from './reducers/userReducer'
+import { logIn, logOut, alreadyLoggedIn } from './reducers/userReducer'
+import { 
+	BrowserRouter as Router,
+	Route, Link
+} from 'react-router-dom'
+import Users from './components/Users'
+import { initializeUsers } from './reducers/allUsersReducer'
 
 const App = (props) => {
 	// general variable, hook and state definitions
@@ -24,37 +29,28 @@ const App = (props) => {
 	const blogs = props.blogs
 	const user = props.user
 
-	// get blogs to display
 	useEffect(() => {
+		// fetch users list and blogs list
 		props.initializeBlogs()
-	}, [])
+		props.initializeUsers()
 
-	// get browser localStorage for logged user
-	useEffect(() => {
-		const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
-		if (loggedUserJSON) {
-			const user = JSON.parse(loggedUserJSON)
-			logIn(user)
-			blogService.setToken(user.token)
-		}
-	})
+		// check if the there is a user logged in localStorage
+		props.alreadyLoggedIn()
+	}, [])
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
 		try {
-			// use credentials
-			const user = await loginService.login({
-				username: username.value, 
-				password: password.value,
-			})
+			const credentials = {
+				username: username.value,
+				password: password.value
+			}
+			// send login
+			props.logIn(credentials)
 
-			// set the localStorage for keeping user logged in 
-			window.localStorage.setItem(
-				'loggedBlogUser', JSON.stringify(user)
-			)
-			blogService.setToken(user.token)
-			// set user with state
-			props.logIn(user)
+			// clear fields
+			username.reset()
+			password.reset()
 		} catch (exception) {
 			// if wrong credentials, since back-end doesn't
 			// recognise items and throws an error
@@ -64,7 +60,6 @@ const App = (props) => {
 
 	const addBlog = async (event) => {
 		event.preventDefault()
-
 		// place all values to 1 object since axios only sends 1 object
 		const blogObject = {
 			title: title.value,
@@ -72,15 +67,12 @@ const App = (props) => {
 			url: url.value,
 			likes: 0
 		}
-
 		// if all went well display message
 		props.setNotification(`you added blog ${title.value} by ${author.value}`, 5)
-
 		// wait for the service method to successfully send the new object 
-		// to the back end
+		// to the back-end
 		const returnedBlog = await blogService.create(blogObject)
 		props.createBlog(returnedBlog)
-
 		// clear the input fields
 		title.reset()
 		author.reset()
@@ -90,7 +82,6 @@ const App = (props) => {
 	const handleLike = id => {
 		// find specific object from all of the objects
 		const blog = blogs.find(b => b.id === id)
-
 		// call axios method to send the updated blog to the back-end
 		props.addLike(blog)
 	}
@@ -98,46 +89,40 @@ const App = (props) => {
 	const handleRemove = async id => {
 		// find specific blog since every blog has unique id
 		const blog = blogs.find(b => b.id === id)
-
 		// request confirmation from user to prevent accidental deletes
 		if (window.confirm(`are you sure you want to delete ${blog.title} by ${blog.author}`)) {
 			// wait for axios method 
 			await blogService.remove(blog)
-
 			// after that filter blogs that don't have the given id
 			props.initializeBlogs(blogs.filter(blog => blog.id !== id))
 		}
 	}
-
-	// the blog form component
-	const formBlog = () => (
-		<Togglable buttonLabel='new blog' ref={blogFormRef}>
-			<BlogForm 
-				onSubmit={addBlog}
-				title={title}
-				author={author}
-				url={url}
-			/>
-		</Togglable>
-	)
-
-	// login form component
-	const loginForm = () => (
-		<Togglable buttonLabel='login'>
-			<LoginForm 
-				username={username}
-				password={password}
-				handleSubmit={handleLogin}
-			/>
-		</Togglable>
-	)	
-	
 	const byLikes = (b1, b2) => b2.likes - b1.likes
 	const sortedBlogs = props.blogs.sort(byLikes)
-	
-	const renderBlogs = () => {
+
+	const Main = () => {
+		if (user === null) {
+			return (
+				<LoginForm 
+					username={username}
+					password={password}
+					handleSubmit={handleLogin}
+				/>
+			)
+		}
 		return (
 			<div>
+				<p>{user.name} logged <button onClick={() => {
+					props.logOut()
+				}}>logout</button></p>
+				<Togglable buttonLabel='new blog' ref={blogFormRef}>
+					<BlogForm 
+						onSubmit={addBlog}
+						title={title}
+						author={author}
+						url={url}
+					/>
+				</Togglable>
 				<h2>Blogs:</h2>
 				{sortedBlogs.map(blog =>
 					<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
@@ -150,23 +135,17 @@ const App = (props) => {
 		<div>
 			<h1>blogs</h1>
 			<Notification />
-			{ 
-				// check if there is logged in user
-				// if it finds a logged user in localStorage or 
-				// user inputs correct credentials
-				// then render menu with blogs and a logout button
-			}
-			{user === null ?
-				loginForm() :
-				<div>
-					<p>{user.name} logged <button onClick={() => {
-						localStorage.clear()
-						props.logOut()
-					}}>logout</button></p>
-					{formBlog()}
-					{renderBlogs()}
-				</div>
-			}
+			<Router>
+				<Link to="/">Home</Link>
+				<Link to="/users">Users</Link>
+				<Route exact path="/" render={() => <Main />} />
+				<Route exact path="/users" render={() => <Users /> } />
+			</Router>
+			<LoginForm 
+				username={username}
+				password={password}
+				handleSubmit={handleLogin}
+			/>
 		</div>
 	)
 }
@@ -185,7 +164,9 @@ const mapDispatchToProps = {
 	addLike,
 	createBlog,
 	logIn,
-	logOut
+	logOut,
+	initializeUsers,
+	alreadyLoggedIn
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
