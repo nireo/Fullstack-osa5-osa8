@@ -17,6 +17,7 @@ import {
 } from 'react-router-dom'
 import Users from './components/Users'
 import { initializeUsers } from './reducers/allUsersReducer'
+import UserView from './components/UserView'
 
 const App = (props) => {
 	// general variable, hook and state definitions
@@ -36,8 +37,9 @@ const App = (props) => {
 
 		// check if the there is a user logged in localStorage
 		props.alreadyLoggedIn()
-	}, [])
 
+	}, [])
+	
 	const handleLogin = async (event) => {
 		event.preventDefault()
 		try {
@@ -86,6 +88,10 @@ const App = (props) => {
 		props.addLike(blog)
 	}
 
+	const userById = (id) => {
+		props.users.find(user => user.id === id)
+	}
+
 	const handleRemove = async id => {
 		// find specific blog since every blog has unique id
 		const blog = blogs.find(b => b.id === id)
@@ -102,27 +108,14 @@ const App = (props) => {
 
 	const Main = () => {
 		if (user === null) {
-			return (
-				<LoginForm 
-					username={username}
-					password={password}
-					handleSubmit={handleLogin}
-				/>
-			)
+			return null
 		}
 		return (
 			<div>
 				<p>{user.name} logged <button onClick={() => {
 					props.logOut()
 				}}>logout</button></p>
-				<Togglable buttonLabel='new blog' ref={blogFormRef}>
-					<BlogForm 
-						onSubmit={addBlog}
-						title={title}
-						author={author}
-						url={url}
-					/>
-				</Togglable>
+
 				<h2>Blogs:</h2>
 				{sortedBlogs.map(blog =>
 					<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
@@ -140,12 +133,23 @@ const App = (props) => {
 				<Link to="/users">Users</Link>
 				<Route exact path="/" render={() => <Main />} />
 				<Route exact path="/users" render={() => <Users /> } />
-			</Router>
-			<LoginForm 
+				{user === null ? <Route exact path="/" render={() =>  <LoginForm 
 				username={username}
 				password={password}
 				handleSubmit={handleLogin}
-			/>
+				/>} /> : 
+				<Route exact path="/" render={() => <Togglable buttonLabel='new blog' ref={blogFormRef}>
+						<BlogForm 
+						onSubmit={addBlog}
+						title={title}
+						author={author}
+						url={url}
+					/>
+				</Togglable> }/>}
+				<Route path="/users/:id" render={({ match }) => 
+					<UserView user={userById(match.params.id)} />
+				} />
+			</Router>
 		</div>
 	)
 }
@@ -153,7 +157,8 @@ const App = (props) => {
 const mapStateToProps = (state) => {
 	return {
 		blogs: state.blogs,
-		user: state.user
+		user: state.user,
+		users: state.allUsers
 	}
 }
 

@@ -26,7 +26,6 @@ export const alreadyLoggedIn = () => {
                 data: { user }
             })
         } 
-        dispatch({ type: 'LOG_OUT' })
     }
 
 }
