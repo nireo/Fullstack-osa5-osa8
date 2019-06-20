@@ -34,8 +34,7 @@ export const alreadyLoggedIn = () => {
 export const logIn = credentials => {
     return async dispatch => {
         // send request to back-end and store the response in a variable
-        const loggedIn = await loginService(credentials)
-        console.log(loggedIn)
+        const loggedIn = await loginService.login(credentials)
         // set the localStorage
         window.localStorage.setItem(
             'loggedBlogUser', JSON.stringify(loggedIn)
