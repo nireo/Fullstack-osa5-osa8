@@ -13,7 +13,7 @@ import { initializeBlogs, addLike, createBlog } from './reducers/blogReducer'
 import { logIn, logOut, alreadyLoggedIn } from './reducers/userReducer'
 import { 
 	BrowserRouter as Router,
-	Route, Link
+	Route
 } from 'react-router-dom'
 import Users from './components/Users'
 import { initializeUsers } from './reducers/allUsersReducer'
@@ -36,12 +36,17 @@ const App = (props) => {
 		// fetch users list and blogs list
 		props.initializeBlogs()
 		props.initializeUsers()
-
-		// check if the there is a user logged in localStorage
-		props.alreadyLoggedIn()
-
 	}, [])
-	
+
+	useEffect(() => {
+		const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
+		if (loggedUserJSON) {
+			const user = JSON.parse(loggedUserJSON)
+			blogService.setToken(user.token)
+			props.alreadyLoggedIn(user)
+		}
+	})
+
 	const handleLogin = async (event) => {
 		event.preventDefault()
 		try {
@@ -75,8 +80,7 @@ const App = (props) => {
 		props.setNotification(`you added blog ${title.value} by ${author.value}`, 5)
 		// wait for the service method to successfully send the new object 
 		// to the back-end
-		const returnedBlog = await blogService.create(blogObject)
-		props.createBlog(returnedBlog)
+		props.createBlog(blogObject)
 		// clear the input fields
 		title.reset()
 		author.reset()
@@ -121,10 +125,6 @@ const App = (props) => {
 		}
 		return (
 			<div>
-				<p>{user.name} logged <Button variant="secondary" onClick={() => {
-					props.logOut()
-				}}>logout</Button></p>
-
 				<h2>Blogs:</h2>
 				{sortedBlogs.map(blog =>
 					<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
@@ -141,6 +141,9 @@ const App = (props) => {
 				<Notification />
 				<Route exact path="/" render={() => <Main />} />
 				<Route exact path="/users" render={() => <Users /> } />
+				<Route path="/users/:id" render={({ match }) => 
+					<UserView user={userById(match.params.id)} />
+				} />
 				{user === null ? <Route exact path="/" render={() =>  <LoginForm 
 				username={username}
 				password={password}
@@ -154,9 +157,6 @@ const App = (props) => {
 						url={url}
 					/>
 				</Togglable> }/>}
-				<Route path="/users/:id" render={({ match }) => 
-					<UserView user={userById(match.params.id)} />
-				} />
 				</div>
 			</Router>
 		</div>

@@ -31,7 +31,8 @@ const NavigationBar = (props) => {
 
 const mapStateToProps = (state, props) => {
     return {
-        showLogOut: props.showLogOut
+        showLogOut: props.showLogOu,
+        user: state.user
     }
 }
 

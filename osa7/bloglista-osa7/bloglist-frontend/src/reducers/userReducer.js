@@ -14,20 +14,11 @@ const reducer = (state=null, action) => {
     }
 }
 
-export const alreadyLoggedIn = () => {
-    return async dispatch => {
-        const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
-        if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON)
-            blogService.setToken(user.token)
-            // make the 'ALREADY_LOGGED' call if it found a user in localStorage
-            dispatch({
-                type: 'ALREADY_LOGGED',
-                data: { user }
-            })
-        } 
+export const alreadyLoggedIn = (user) => {
+    return {
+        type: 'ALREADY_LOGGD',
+        data: { user }
     }
-
 }
 
 export const logIn = credentials => {

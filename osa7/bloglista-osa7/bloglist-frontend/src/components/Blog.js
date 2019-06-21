@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button, ButtonGroup } from "react-bootstrap"
 
 const Blog = ({ blog, handleLike, handleRemove, showState }) => {
 	const [showMore, setShowMore] = useState(showState)
@@ -8,7 +9,8 @@ const Blog = ({ blog, handleLike, handleRemove, showState }) => {
 		paddingLeft: 2,
 		border: 'solid',
 		borderWidth: 1,
-		marginBottom: 5
+		marginBottom: 5,
+		borderRadius: '10px'
 	}
 
 	if (showMore) {
@@ -17,19 +19,20 @@ const Blog = ({ blog, handleLike, handleRemove, showState }) => {
 				<div>title: {blog.title}</div>
 				<div>author: {blog.author}</div>
 				<div>url: {blog.url}</div>
-				<div>likes: {blog.likes}<button onClick={() => handleLike(blog.id)}>like</button>
-				</div>
-				<button onClick={() => setShowMore(false)}>close</button><button onClick={() => handleRemove(blog.id)}>delete</button>
+				<ButtonGroup aria-label="Basic example">
+					<Button onClick={() => setShowMore(false)} variant="secondary">show less</Button>
+					<Button onClick={() => handleLike(blog.id)} variant="secondary">like</Button>
+					<Button onClick={() => handleRemove(blog.id)} variant="danger">delete</Button>
+				</ButtonGroup>
 			</div>
 		)
-	}
+	}  
 
-		
 	return (
-		<div style={blogStyle} onClick={() => setShowMore(true)}>
-			{blog.title} {blog.author}
+		<div style={blogStyle} >
+			{blog.title} {blog.author} <Button variant="secondary" onClick={() => setShowMore(true)}>show more</Button>
 		</div>
-	) 
+	)
 }
 
 export default Blog
