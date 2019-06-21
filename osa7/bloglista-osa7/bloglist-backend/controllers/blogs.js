@@ -54,13 +54,23 @@ blogsRouter.post('/', async (request, response, next) => {
     }
 })
 
+blogsRouter.post("/:id/comments", async (request, response, next) => {
+    try {
+        // find blog which has the comments
+        const blog = await Blog.findById(request.params.id)
+        blog.comments = blog.comments.concat(request.body.comment)
+        await blog.save()
+        response.json(blog.toJSON())
+    } catch (exception) {
+        next(exception)
+    }
+})
+
 blogsRouter.delete('/:id', async (request, response, next) => {
     const token = getTokenFrom(request)
     try {
         const decodedToken = jwt.verify(token, process.env.SECRET)
         const blog = await Blog.findById(request.params.id)
-        console.log("blog", blog)
-        console.log("decodedToken", decodedToken)
 
         if (blog.user.toString() === decodedToken.id) {
             await Blog.findByIdAndRemove(blog.id)
