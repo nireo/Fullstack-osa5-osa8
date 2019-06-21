@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom'
 import { Table } from "react-bootstrap"
 
 const Users = (props) => {
-    const userList = props.allUsers.map(
+    const byBlogs = (b1, b2) => b2.blogs.length - b1.blogs.length
+    const sortedUsers = props.allUsers.sort(byBlogs)
+
+
+    const userList = sortedUsers.map(
         user => <tr key={user.name}>
             <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
             <td>{user.blogs.length}</td>

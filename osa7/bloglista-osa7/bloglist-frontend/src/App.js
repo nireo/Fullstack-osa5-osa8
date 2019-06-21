@@ -45,6 +45,7 @@ const App = (props) => {
 			blogService.setToken(user.token)
 			props.alreadyLoggedIn(user)
 		}
+		props.alreadyLoggedIn(null)
 	})
 
 	const handleLogin = async (event) => {
@@ -94,9 +95,8 @@ const App = (props) => {
 		props.addLike(blog)
 	}
 
-	const userById = (id) => {
+	const userById = (id) => 
 		props.users.find(u => u.id === id)
-	}
 
 	const handleRemove = async id => {
 		// find specific blog since every blog has unique id

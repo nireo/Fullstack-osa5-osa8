@@ -9,6 +9,7 @@ const UserView = (props) => {
     return (
         <div>
             <h3>{props.user.name}</h3>
+            <h5>Blogs:</h5>
             <ul>
                 {props.user.blogs.map(blog => 
                     <li>{blog.title}</li>    
@@ -18,10 +19,4 @@ const UserView = (props) => {
     )
 }
 
-const mapStateToProps = (state, props) => {
-    return {
-        user: props,
-    }
-}
-
-export default connect(mapStateToProps, null)(UserView)
+export default connect(null, null)(UserView)

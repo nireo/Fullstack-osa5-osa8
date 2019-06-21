@@ -17,9 +17,11 @@ const NavigationBar = (props) => {
                 <Nav.Link href="#" as="span">
                     <Link style={linkStyle} to="/">Home</Link>
                 </Nav.Link>
-                <Nav.Link>
-                    <Link style={linkStyle} to="/users">Users</Link>
-                </Nav.Link>
+                {(props.showLogOut &&
+                    <Nav.Link>
+                        <Link style={linkStyle} to="/users">Users</Link>
+                    </Nav.Link>
+                )}
             </Nav>
             {(props.showLogOut &&
                 <Button variant="outline-primary" onClick={() => props.logOut()}>logout</Button>    
@@ -31,7 +33,7 @@ const NavigationBar = (props) => {
 
 const mapStateToProps = (state, props) => {
     return {
-        showLogOut: props.showLogOu,
+        showLogOut: props.showLogOut,
         user: state.user
     }
 }
@@ -40,4 +42,4 @@ const mapDispatchToProps = {
     logOut
 }
 
-export default connect( null, mapDispatchToProps )( NavigationBar )
+export default connect( mapStateToProps, mapDispatchToProps )( NavigationBar )
