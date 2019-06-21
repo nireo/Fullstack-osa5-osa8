@@ -18,8 +18,8 @@ import {
 import Users from './components/Users'
 import { initializeUsers } from './reducers/allUsersReducer'
 import UserView from './components/UserView'
-import { Button } from 'react-bootstrap'
 import Navbar from "./components/NavBar"
+import BlogView from "./components/BlogView"
 
 const App = (props) => {
 	// general variable, hook and state definitions
@@ -31,6 +31,7 @@ const App = (props) => {
 	const blogFormRef = React.createRef()
 	const blogs = props.blogs
 	const user = props.user
+	const users = props.users
 
 	useEffect(() => {
 		// fetch users list and blogs list
@@ -96,7 +97,10 @@ const App = (props) => {
 	}
 
 	const userById = (id) => 
-		props.users.find(u => u.id === id)
+		users.find(u => u.id === id)
+
+	const blogById = (id) => 
+		blogs.find(b => b.id === id)
 
 	const handleRemove = async id => {
 		// find specific blog since every blog has unique id
@@ -127,7 +131,7 @@ const App = (props) => {
 			<div>
 				<h2>Blogs:</h2>
 				{sortedBlogs.map(blog =>
-					<Blog key= {blog.id } blog={ blog } handleLike={ handleLike } handleRemove={ handleRemove } showState={false} />
+					<Blog key={blog.id } blog={blog} />
 				)}
 			</div>
 		)
@@ -144,6 +148,13 @@ const App = (props) => {
 				<Route path="/users/:id" render={({ match }) => 
 					<UserView user={userById(match.params.id)} />
 				} />
+				<Route path="/blogs/:id" render={({ match }) => 
+					<BlogView 
+						blog={blogById(match.params.id)} 
+						handleLike={handleLike}
+						handleRemove={handleRemove}
+						/>
+				} /> 
 				{user === null ? <Route exact path="/" render={() =>  <LoginForm 
 				username={username}
 				password={password}
