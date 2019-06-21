@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Form, Button } from 'react-bootstrap' 
 
 const LoginForm = ({
 	handleSubmit,
@@ -8,23 +9,20 @@ const LoginForm = ({
 }) => {
 	return (
 		<div>
-			<h2>Kirjaudu</h2>
-  
-			<form onSubmit={ handleSubmit }>
-				<div>
-            käyttäjätunnus
-					<input
-						{ ...username }
-					/>
-				</div>
-				<div>
-            salasana
-					<input
-						{ ...password }
-					/>
-				</div>
-				<button type='submit'>kirjaudu</button>
-			</form>
+			<h2>Login</h2>
+			<Form onSubmit={ handleSubmit }>
+				<Form.Group>
+					<Form.Label>Username: </Form.Label>
+						<Form.Control
+							{ ...username }
+						/>
+					<Form.Label>Password: </Form.Label>
+						<Form.Control
+							{ ...password }
+						/>
+					<Button variant="primary" type='submit'>login</Button>
+				</Form.Group>
+			</Form>
 		</div>
 	)
 }

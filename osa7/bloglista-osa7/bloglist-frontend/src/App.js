@@ -18,6 +18,8 @@ import {
 import Users from './components/Users'
 import { initializeUsers } from './reducers/allUsersReducer'
 import UserView from './components/UserView'
+import { Button } from 'react-bootstrap'
+import Navbar from "./components/NavBar"
 
 const App = (props) => {
 	// general variable, hook and state definitions
@@ -89,7 +91,7 @@ const App = (props) => {
 	}
 
 	const userById = (id) => {
-		props.users.find(user => user.id === id)
+		props.users.find(u => u.id === id)
 	}
 
 	const handleRemove = async id => {
@@ -106,15 +108,22 @@ const App = (props) => {
 	const byLikes = (b1, b2) => b2.likes - b1.likes
 	const sortedBlogs = props.blogs.sort(byLikes)
 
+	const giveLogoutButton = (user) => {
+		if (user === null) {
+			return false
+		}
+		return true
+	}
+
 	const Main = () => {
 		if (user === null) {
 			return null
 		}
 		return (
 			<div>
-				<p>{user.name} logged <button onClick={() => {
+				<p>{user.name} logged <Button variant="secondary" onClick={() => {
 					props.logOut()
-				}}>logout</button></p>
+				}}>logout</Button></p>
 
 				<h2>Blogs:</h2>
 				{sortedBlogs.map(blog =>
@@ -126,11 +135,10 @@ const App = (props) => {
 
 	return (
 		<div>
-			<h1>blogs</h1>
-			<Notification />
 			<Router>
-				<Link to="/">Home</Link>
-				<Link to="/users">Users</Link>
+				<Navbar showLogOut={giveLogoutButton(user)} />
+				<div className="container">
+				<Notification />
 				<Route exact path="/" render={() => <Main />} />
 				<Route exact path="/users" render={() => <Users /> } />
 				{user === null ? <Route exact path="/" render={() =>  <LoginForm 
@@ -149,6 +157,7 @@ const App = (props) => {
 				<Route path="/users/:id" render={({ match }) => 
 					<UserView user={userById(match.params.id)} />
 				} />
+				</div>
 			</Router>
 		</div>
 	)

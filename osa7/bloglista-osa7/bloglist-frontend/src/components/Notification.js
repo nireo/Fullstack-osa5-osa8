@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Alert } from 'react-bootstrap'
 
 const Notification = (props) => {
 	const message = props.notifications
@@ -10,17 +11,17 @@ const Notification = (props) => {
 	// check if the message is success message
 	if (message.includes('you added blog')) {
 		return (
-			<div className="success">
+			<Alert variant="success">
 				{message}
-			</div>
+			</Alert>
 		)
 	}
 
 	// return error message
 	return (
-		<div className="error">
+		<Alert variant="danger">
 			{message}
-		</div>
+		</Alert>
 	)
 }
 

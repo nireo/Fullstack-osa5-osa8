@@ -2,6 +2,10 @@ import React from "react"
 import { connect } from "react-redux"
 
 const UserView = (props) => {
+    if (props.user === undefined) {
+        return null
+    }
+
     return (
         <div>
             <h3>{props.user.name}</h3>
@@ -16,7 +20,7 @@ const UserView = (props) => {
 
 const mapStateToProps = (state, props) => {
     return {
-        user: props.user,
+        user: props,
     }
 }
 

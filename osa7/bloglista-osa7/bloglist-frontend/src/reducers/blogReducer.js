@@ -19,7 +19,7 @@ export const createBlog = content => {
         dispatch({
             type: 'NEW_BLOG',
             data: newBlog
-        })
+        }) 
     }
 }
 

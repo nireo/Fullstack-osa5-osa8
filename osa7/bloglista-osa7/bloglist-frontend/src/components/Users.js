@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Table } from "react-bootstrap"
 
 const Users = (props) => {
     const userList = props.allUsers.map(
-        user => <tr>
+        user => <tr key={user.name}>
             <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
             <td>{user.blogs.length}</td>
         </tr>
@@ -13,13 +14,15 @@ const Users = (props) => {
     return (
         <div>
             <h2>Users</h2>
-            <table>
-                <tr>    
-                    <th>Name</th>
-                    <th>Blogs Created:</th>
-                </tr>
-                {userList}
-            </table>
+            <Table striped>
+                <tbody>
+                    <tr>    
+                        <th>Name</th>
+                        <th>Blogs Created:</th>
+                    </tr>
+                    {userList}
+                </tbody>    
+            </Table>
         </div>
     )
 }
