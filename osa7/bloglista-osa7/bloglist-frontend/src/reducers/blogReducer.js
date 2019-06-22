@@ -6,7 +6,7 @@ const reducer = (state = [], action) => {
             return state.concat(action.data)
         case 'INIT_BLOGS':
             return action.data
-        case 'ADD_LIKE':
+        case 'UPDATE':
             return state.map(b => b.id === action.data.id ? action.data : b)
         default:
             return state
@@ -28,7 +28,7 @@ export const addLike = blog => {
     return async dispatch => {
         const likeBlog = await blogService.update(likeTemplate)
         dispatch({
-            type: 'ADD_LIKE',
+            type: 'UPDATE',
             data: likeBlog
         })
     }
@@ -40,6 +40,17 @@ export const initializeBlogs = () => {
         dispatch({
             type: 'INIT_BLOGS',
             data: blogs
+        })
+    }
+}
+
+export const handleComment = (blog, comment) => {
+    console.log(blog.id)
+    return async dispatch => {
+        const commentedBlog = await blogService.addComment(blog.id, comment)
+        dispatch({
+            type: 'UPDATE',
+            data: commentedBlog
         })
     }
 }

@@ -7,16 +7,14 @@ const reducer = (state=null, action) => {
             return action.data
         case 'LOG_OUT':
             return null
-        case 'ALREADY_LOGGED':
-            return action.data
         default:
             return state
     }
 }
 
-export const alreadyLoggedIn = (user) => {
+export const alreadyLoggedIn = user => {
     return {
-        type: 'ALREADY_LOGGD',
+        type: 'LOG_IN',
         data: { user }
     }
 }
@@ -40,9 +38,8 @@ export const logIn = credentials => {
 }
 
 export const logOut = () => {
-    // clear localStorage
-    localStorage.clear()
     // make a call to set user to null
+    localStorage.clear()
     return { type: 'LOG_OUT' }
 }
 

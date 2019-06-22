@@ -41,13 +41,16 @@ const App = (props) => {
 
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
-		if (loggedUserJSON) {
+		if (loggedUserJSON !== null && loggedUserJSON !== undefined) {
 			const user = JSON.parse(loggedUserJSON)
 			blogService.setToken(user.token)
+			console.log(user)
 			props.alreadyLoggedIn(user)
 		}
 		props.alreadyLoggedIn(null)
 	})
+
+	console.log(user)
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
