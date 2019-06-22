@@ -17,6 +17,11 @@ const NavigationBar = (props) => {
                 <Nav.Link href="#" as="span">
                     <Link style={linkStyle} to="/">Home</Link>
                 </Nav.Link>
+                {(!props.showLogOut &&
+                    <Nav.Link>
+                        <Link style={linkStyle} to="/login">Login</Link>
+                    </Nav.Link>    
+                )}
                 {(props.showLogOut &&
                     <Nav.Link>
                         <Link style={linkStyle} to="/users">Users</Link>

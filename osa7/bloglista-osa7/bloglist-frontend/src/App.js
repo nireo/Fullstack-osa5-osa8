@@ -9,11 +9,11 @@ import Togglable from './components/Togglable'
 import { useField } from './hooks/index'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { connect } from 'react-redux'
-import { initializeBlogs, addLike, createBlog } from './reducers/blogReducer'
+import { initializeBlogs, addLike, createBlog, handleComment } from './reducers/blogReducer'
 import { logIn, logOut, alreadyLoggedIn } from './reducers/userReducer'
 import { 
 	BrowserRouter as Router,
-	Route
+	Route, Redirect
 } from 'react-router-dom'
 import Users from './components/Users'
 import { initializeUsers } from './reducers/allUsersReducer'
@@ -44,13 +44,9 @@ const App = (props) => {
 		if (loggedUserJSON !== null && loggedUserJSON !== undefined) {
 			const user = JSON.parse(loggedUserJSON)
 			blogService.setToken(user.token)
-			console.log(user)
 			props.alreadyLoggedIn(user)
 		}
-		props.alreadyLoggedIn(null)
 	})
-
-	console.log(user)
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
@@ -116,6 +112,8 @@ const App = (props) => {
 			props.initializeBlogs(blogs.filter(blog => blog.id !== id))
 		}
 	}
+
+
 	const byLikes = (b1, b2) => b2.likes - b1.likes
 	const sortedBlogs = props.blogs.sort(byLikes)
 
@@ -126,16 +124,25 @@ const App = (props) => {
 		return true
 	}
 
-	const Main = () => {
+	const renderBlogs = () => {
 		if (user === null) {
-			return null
+			return (
+				<div></div>
+			)
 		}
 		return (
 			<div>
 				<h2>Blogs:</h2>
 				{sortedBlogs.map(blog =>
-					<Blog key={blog.id } blog={blog} />
+					<Blog blog={blog} />
 				)}
+				<Togglable buttonLabel='new blog' ref={blogFormRef}>
+					<BlogForm 
+					onSubmit={addBlog}
+					title={title}
+					author={author}
+					url={url} />
+				</Togglable>
 			</div>
 		)
 	}
@@ -146,31 +153,32 @@ const App = (props) => {
 				<Navbar showLogOut={giveLogoutButton(user)} />
 				<div className="container">
 				<Notification />
-				<Route exact path="/" render={() => <Main />} />
+				<Route exact path="/" render={() =>
+					user === null
+						? <Redirect to="/login" />
+						: renderBlogs()
+					} />
 				<Route exact path="/users" render={() => <Users /> } />
 				<Route path="/users/:id" render={({ match }) => 
 					<UserView user={userById(match.params.id)} />
 				} />
-				<Route path="/blogs/:id" render={({ match }) => 
+				<Route path="/login" render={() => 
+					user !== null ?
+						<Redirect to="/" />
+						: 
+						<LoginForm 
+						username={username}
+						password={password}
+						handleSubmit={handleLogin}
+						/>
+					} />
+				<Route exact path="/blogs/:id" render={({ match }) => 
 					<BlogView 
 						blog={blogById(match.params.id)} 
 						handleLike={handleLike}
 						handleRemove={handleRemove}
-						/>
-				} /> 
-				{user === null ? <Route exact path="/" render={() =>  <LoginForm 
-				username={username}
-				password={password}
-				handleSubmit={handleLogin}
-				/>} /> : 
-				<Route exact path="/" render={() => <Togglable buttonLabel='new blog' ref={blogFormRef}>
-						<BlogForm 
-						onSubmit={addBlog}
-						title={title}
-						author={author}
-						url={url}
 					/>
-				</Togglable> }/>}
+				} /> 
 				</div>
 			</Router>
 		</div>
@@ -194,7 +202,7 @@ const mapDispatchToProps = {
 	logIn,
 	logOut,
 	initializeUsers,
-	alreadyLoggedIn
+	alreadyLoggedIn,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

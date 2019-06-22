@@ -45,9 +45,12 @@ export const initializeBlogs = () => {
 }
 
 export const handleComment = (blog, comment) => {
-    console.log(blog.id)
+    const commentObject = { comment: comment }
     return async dispatch => {
-        const commentedBlog = await blogService.addComment(blog.id, comment)
+        if (comment === '') {
+            return null
+        }
+        const commentedBlog = await blogService.addComment(blog, commentObject)
         dispatch({
             type: 'UPDATE',
             data: commentedBlog

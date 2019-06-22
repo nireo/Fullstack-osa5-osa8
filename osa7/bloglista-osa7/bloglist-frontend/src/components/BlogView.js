@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { connect } from "react-redux"
 import { Button, ButtonGroup, Form } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import { handleComment } from "../reducers/blogReducer"
 import { useField } from "../hooks/index"
+import { handleComment } from "../reducers/blogReducer"
 
 const BlogView = (props) => {
     const comment = useField('text')
@@ -14,11 +14,11 @@ const BlogView = (props) => {
     const padding = {
         padding: '10px'
     }
-    console.log(props.blog.id)
+
+    console.log("hello")
 
     const addComment = () => {
-        const commentObject = { comment: comment.value }
-        props.handleComment(props.blog, commentObject)
+        props.handleComment(props.blog, comment.value)
     }
 
     return (
@@ -32,12 +32,12 @@ const BlogView = (props) => {
                 <Button variant="danger" onClick={() => props.handleRemove(props.blog.id)}>remove</Button>
             </ButtonGroup>
             <h3>Comments: </h3>
-            <Form onSubmit={addComment}>
+            <Form onSubmit={props.handleComment(props.blog, comment.value)}>
                 <Form.Label>Comment:</Form.Label>
                 <Form.Control 
                     {...comment}
                 />
-                <Button variant="primary" type="submit">add comment</Button>
+                <Button onClick={() => props.handleComment(props.blog, comment.value)}variant="primary">add comment</Button>
             </Form>
             <ul>
                 {allComments}

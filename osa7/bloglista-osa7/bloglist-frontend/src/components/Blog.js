@@ -2,7 +2,7 @@ import React from 'react'
 import { Card } from "react-bootstrap"
 import { Link } from "react-router-dom"
 
-const Blog = ({ blog, redirectLink}) => {
+const Blog = ({ blog }) => {
 	return (
 		<div>
 			<Card>
@@ -17,9 +17,7 @@ const Blog = ({ blog, redirectLink}) => {
 			</Card>
 			<br />
 		</div>
-
 	)
-
 }
 
 export default Blog

@@ -54,16 +54,17 @@ blogsRouter.post('/', async (request, response, next) => {
     }
 })
 
-blogsRouter.post("/:id/comments", async (request, response, next) => {
-    try {
-        // find blog which has the comments
-        const blog = await Blog.findById(request.params.id)
-        blog.comments = blog.comments.concat(request.body.comment)
-        await blog.save()
-        response.json(blog.toJSON())
-    } catch (exception) {
-        next(exception)
+blogsRouter.post("/:id/comments", async (request, response) => {
+    const comment = request.body.comment
+    // find blog which has the comments
+    if (!comment) {
+        return response.status(400)
     }
+
+    const blog = await Blog.findById(request.params.id)
+    blog.comments = blog.comments.concat(comment)
+    await blog.save()
+    response.json(blog.toJSON())
 })
 
 blogsRouter.delete('/:id', async (request, response, next) => {
