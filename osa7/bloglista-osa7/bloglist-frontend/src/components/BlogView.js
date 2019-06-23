@@ -3,22 +3,24 @@ import { connect } from "react-redux"
 import { Button, ButtonGroup, Form } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import { useField } from "../hooks/index"
-import { handleComment } from "../reducers/blogReducer"
+import { initializeBlogs } from "../reducers/blogReducer"
+import blogService from "../services/blogs"
 
 const BlogView = (props) => {
     const comment = useField('text')
     if (props.blog === undefined) {
         return null
     }
-    const allComments = props.blog.comments.map(comment => <li>{comment}</li>)
+    const allComments = props.blog.comments.map(comment => <li key={comment}>{comment}</li>)
     const padding = {
         padding: '10px'
     }
 
-    console.log("hello")
-
-    const addComment = () => {
-        props.handleComment(props.blog, comment.value)
+    const addComment = async () => {
+        console.log("clicked")
+        await blogService.addComment({blog: props.blog, comment: comment.value})
+        props.initializeBlogs()
+        comment.reset()
     }
 
     return (
@@ -32,12 +34,16 @@ const BlogView = (props) => {
                 <Button variant="danger" onClick={() => props.handleRemove(props.blog.id)}>remove</Button>
             </ButtonGroup>
             <h3>Comments: </h3>
-            <Form onSubmit={props.handleComment(props.blog, comment.value)}>
-                <Form.Label>Comment:</Form.Label>
-                <Form.Control 
-                    {...comment}
-                />
-                <Button onClick={() => props.handleComment(props.blog, comment.value)}variant="primary">add comment</Button>
+            <Form onSubmit={addComment}>
+                <Form.Group>
+                    <Form.Label>Comment:</Form.Label>
+                    <Form.Control 
+                        type={comment.type}
+                        value={comment.value}
+                        onChange={comment.onChange}
+                    />
+                    <Button variant="primary" type="submit">add comment</Button>
+                </Form.Group>
             </Form>
             <ul>
                 {allComments}
@@ -48,7 +54,7 @@ const BlogView = (props) => {
 }
 
 const mapDispatchToProps = {
-    handleComment
+    initializeBlogs
 }
 
 export default connect(null, mapDispatchToProps)(BlogView)

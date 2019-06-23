@@ -109,7 +109,7 @@ const App = (props) => {
 			// wait for axios method 
 			await blogService.remove(blog)
 			// after that filter blogs that don't have the given id
-			props.initializeBlogs(blogs.filter(blog => blog.id !== id))
+			props.initializeBlogs()
 		}
 	}
 

@@ -3,10 +3,12 @@ import blogService from "../services/blogs"
 const reducer = (state = [], action) => {
     switch (action.type) {
         case 'NEW_BLOG':
+            console.log(state)
             return state.concat(action.data)
         case 'INIT_BLOGS':
             return action.data
         case 'UPDATE':
+            console.log(action.data)
             return state.map(b => b.id === action.data.id ? action.data : b)
         default:
             return state
@@ -45,15 +47,15 @@ export const initializeBlogs = () => {
 }
 
 export const handleComment = (blog, comment) => {
-    const commentObject = { comment: comment }
+    const commentObject = { comment: comment.value }
     return async dispatch => {
         if (comment === '') {
             return null
         }
         const commentedBlog = await blogService.addComment(blog, commentObject)
         dispatch({
-            type: 'UPDATE',
-            data: commentedBlog
+            type: 'NEW_COMMENT',
+            data: { commentedBlog }
         })
     }
 }
