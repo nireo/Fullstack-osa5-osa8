@@ -11,6 +11,15 @@ const getTokenFrom = request => {
     return null
 }
 
+
+/* koodi toimii, mutta en halua poistaa kaikkea dataa, sillä testi database ei toimi
+blogsRouter.post('/reset', async (request, response) => {
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    response.status(204).end()
+}) */
+
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
         .find({}).populate('user', {username: 1, name: 1})
