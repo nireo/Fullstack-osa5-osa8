@@ -18,8 +18,8 @@ import {
 import Users from './components/Users'
 import { initializeUsers } from './reducers/allUsersReducer'
 import UserView from './components/UserView'
-import Navbar from "./components/NavBar"
-import BlogView from "./components/BlogView"
+import Navbar from './components/NavBar'
+import BlogView from './components/BlogView'
 
 const App = (props) => {
 	// general variable, hook and state definitions
@@ -138,10 +138,10 @@ const App = (props) => {
 				)}
 				<Togglable buttonLabel='new blog' ref={blogFormRef}>
 					<BlogForm 
-					onSubmit={addBlog}
-					title={title}
-					author={author}
-					url={url} />
+						onSubmit={addBlog}
+						title={title}
+						author={author}
+						url={url} />
 				</Togglable>
 			</div>
 		)
@@ -152,33 +152,33 @@ const App = (props) => {
 			<Router>
 				<Navbar showLogOut={giveLogoutButton(user)} />
 				<div className="container">
-				<Notification />
-				<Route exact path="/" render={() =>
-					user === null
-						? <Redirect to="/login" />
-						: renderBlogs()
+					<Notification />
+					<Route exact path="/" render={() =>
+						user === null
+							? <Redirect to="/login" />
+							: renderBlogs()
 					} />
-				<Route exact path="/users" render={() => <Users /> } />
-				<Route path="/users/:id" render={({ match }) => 
-					<UserView user={userById(match.params.id)} />
-				} />
-				<Route path="/login" render={() => 
-					user !== null ?
-						<Redirect to="/" />
-						: 
-						<LoginForm 
-						username={username}
-						password={password}
-						handleSubmit={handleLogin}
+					<Route exact path="/users" render={() => <Users /> } />
+					<Route path="/users/:id" render={({ match }) => 
+						<UserView user={userById(match.params.id)} />
+					} />
+					<Route path="/login" render={() => 
+						user !== null ?
+							<Redirect to="/" />
+							: 
+							<LoginForm 
+								username={username}
+								password={password}
+								handleSubmit={handleLogin}
+							/>
+					} />
+					<Route exact path="/blogs/:id" render={({ match }) => 
+						<BlogView 
+							blog={blogById(match.params.id)} 
+							handleLike={handleLike}
+							handleRemove={handleRemove}
 						/>
-					} />
-				<Route exact path="/blogs/:id" render={({ match }) => 
-					<BlogView 
-						blog={blogById(match.params.id)} 
-						handleLike={handleLike}
-						handleRemove={handleRemove}
-					/>
-				} /> 
+					} /> 
 				</div>
 			</Router>
 		</div>
